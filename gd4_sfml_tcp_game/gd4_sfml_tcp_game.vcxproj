@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aircraft.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Command.cpp" />
@@ -138,12 +139,15 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="DataTables.cpp" />
+    <ClCompile Include="EmitterNode.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="ParticleNode.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -163,6 +167,7 @@
     <ClInclude Include="Action.hpp" />
     <ClInclude Include="Aircraft.hpp" />
     <ClInclude Include="AircraftType.hpp" />
+    <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Application.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Command.hpp" />
@@ -171,13 +176,19 @@
     <ClInclude Include="Constants.hpp" />
     <ClInclude Include="Container.hpp" />
     <ClInclude Include="DataTables.hpp" />
+    <ClInclude Include="EmitterNode.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Font.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="GameOverState.hpp" />
     <ClInclude Include="GameState.hpp" />
     <ClInclude Include="Label.hpp" />
     <ClInclude Include="MenuOptions.hpp" />
     <ClInclude Include="MenuState.hpp" />
+    <ClInclude Include="MissionStatus.hpp" />
+    <ClInclude Include="Particle.hpp" />
+    <ClInclude Include="ParticleNode.hpp" />
+    <ClInclude Include="ParticleType.hpp" />
     <ClInclude Include="PauseState.hpp" />
     <ClInclude Include="Pickup.hpp" />
     <ClInclude Include="PickupType.hpp" />

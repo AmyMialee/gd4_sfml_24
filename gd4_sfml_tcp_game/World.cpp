@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "Pickup.hpp"
 #include "Projectile.hpp"
+#include "ParticleNode.hpp"
 
 World::World(sf::RenderWindow& window, FontHolder& font)
 	:m_window(window)
@@ -80,6 +81,14 @@ void World::LoadTextures()
 	m_textures.Load(TextureID::kMissileRefill, "Media/Textures/MissileRefill.png");
 	m_textures.Load(TextureID::kFireSpread, "Media/Textures/FireSpread.png");
 	m_textures.Load(TextureID::kFireRate, "Media/Textures/FireRate.png");
+	m_textures.Load(TextureID::kFinishLine, "Media/Textures/FinishLine.png");
+
+	m_textures.Load(TextureID::kEntities, "Media/Textures/Entities.png");
+	m_textures.Load(TextureID::kJungle, "Media/Textures/Jungle.png");
+	m_textures.Load(TextureID::kExplosion, "Media/Textures/Explosion.png");
+	m_textures.Load(TextureID::kParticle, "Media/Textures/Particle.png");
+
+
 }
 
 void World::BuildScene()
@@ -87,14 +96,14 @@ void World::BuildScene()
 	//Initialize the different layers
 	for (std::size_t i = 0; i < static_cast<int>(SceneLayers::kLayerCount); ++i)
 	{
-		ReceiverCategories category = (i == static_cast<int>(SceneLayers::kAir)) ? ReceiverCategories::kScene : ReceiverCategories::kNone;
+		ReceiverCategories category = (i == static_cast<int>(SceneLayers::kLowerAir)) ? ReceiverCategories::kScene : ReceiverCategories::kNone;
 		SceneNode::Ptr layer(new SceneNode(category));
 		m_scene_layers[i] = layer.get();
 		m_scenegraph.AttachChild(std::move(layer));
 	}
 
 	//Prepare the background
-	sf::Texture& texture = m_textures.Get(TextureID::kLandscape);
+	sf::Texture& texture = m_textures.Get(TextureID::kJungle);
 	sf::IntRect textureRect(m_world_bounds);
 	texture.setRepeated(true);
 
@@ -103,12 +112,26 @@ void World::BuildScene()
 	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
 	m_scene_layers[static_cast<int>(SceneLayers::kBackground)]->AttachChild(std::move(background_sprite));
 
+	//Add the finish line
+	sf::Texture& finish_texture = m_textures.Get(TextureID::kFinishLine);
+	std::unique_ptr<SpriteNode> finish_sprite(new SpriteNode(finish_texture));
+	finish_sprite->setPosition(0.f, -76.f);
+	m_scene_layers[static_cast<int>(SceneLayers::kBackground)]->AttachChild(std::move(finish_sprite));
+
 	//Add the player's aircraft
 	std::unique_ptr<Aircraft> leader(new Aircraft(AircraftType::kEagle, m_textures, m_fonts));
 	m_player_aircraft = leader.get();
 	m_player_aircraft->setPosition(m_spawn_position);
 	m_player_aircraft->SetVelocity(40.f, m_scrollspeed);
-	m_scene_layers[static_cast<int>(SceneLayers::kAir)]->AttachChild(std::move(leader));
+	m_scene_layers[static_cast<int>(SceneLayers::kUpperAir)]->AttachChild(std::move(leader));
+
+	//Add the particle nodes to the scene
+	std::unique_ptr<ParticleNode> smokeNode(new ParticleNode(ParticleType::kSmoke, m_textures));
+	m_scene_layers[static_cast<int>(SceneLayers::kLowerAir)]->AttachChild(std::move(smokeNode));
+
+	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(ParticleType::kPropellant, m_textures));
+	m_scene_layers[static_cast<int>(SceneLayers::kLowerAir)]->AttachChild(std::move(propellantNode));
+
 
 	AddEnemies();
 
@@ -157,7 +180,7 @@ void World::SpawnEnemies()
 		std::unique_ptr<Aircraft> enemy(new Aircraft(spawn.m_type, m_textures, m_fonts));
 		enemy->setPosition(spawn.m_x, spawn.m_y);
 		enemy->setRotation(180.f);
-		m_scene_layers[static_cast<int>(SceneLayers::kAir)]->AttachChild(std::move(enemy));
+		m_scene_layers[static_cast<int>(SceneLayers::kUpperAir)]->AttachChild(std::move(enemy));
 		m_enemy_spawn_points.pop_back();
 	}
 }
